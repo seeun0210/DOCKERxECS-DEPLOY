@@ -24,7 +24,7 @@ afterAll(async () => {
 
 describe("POST /messages", () => {
   it("responds with a success message", async () => {
-    const response = await request(app as unknown as App)
+    const response = await request(app)
       .post("/messages")
       .send({ message: "testing with redis" });
 
@@ -36,8 +36,7 @@ describe("POST /messages", () => {
 describe("GET /messages", () => {
   it("responds with all messages", async () => {
     await client.lPush(LIST_KEY, ["msg1", "msg2"]);
-    const response = await request(app as unknown as App)
-    .get("/messages");
+    const response = await request(app).get("/messages");
     expect(response.statusCode).toBe(200);
     expect(response.body).toEqual(["msg2", "msg1"]);
   });
