@@ -35,31 +35,21 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const express_1 = __importDefault(require("express"));
+const dotenv_1 = __importDefault(require("dotenv"));
+dotenv_1.default.config();
 const redis = __importStar(require("redis"));
-const PORT = 4000;
-const LIST_KEY = "messages";
-const createApp = () => __awaiter(void 0, void 0, void 0, function* () {
-    const app = (0, express_1.default)();
-    const client = redis.createClient({ url: "redis://localhost:6379" });
+const app_1 = require("./app");
+const { PORT, REDIS_URL } = process.env;
+if (!PORT)
+    throw new Error("PORT is required");
+if (!REDIS_URL)
+    throw new Error("REDIS_URL is required");
+const startServer = () => __awaiter(void 0, void 0, void 0, function* () {
+    const client = redis.createClient({ url: REDIS_URL });
     yield client.connect();
-    app.use(express_1.default.json());
-    app.get("/", (req, res) => {
-        res.status(200).send("hello from express");
-    });
-    app.post("/messages", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-        const { message } = req.body;
-        yield client.lPush(LIST_KEY, message);
-        res.status(200).send("Message added to list");
-    }));
-    app.get("/messages", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-        const messages = yield client.lRange(LIST_KEY, 0, -1);
-        res.status(200).send(messages);
-    }));
-    return app;
-});
-createApp().then((app) => {
+    const app = (0, app_1.createApp)(client);
     app.listen(PORT, () => {
-        console.log(`Àpp listening at port ${PORT}`);
+        console.log(`App listening at port ${PORT}`);
     });
 });
+startServer();
