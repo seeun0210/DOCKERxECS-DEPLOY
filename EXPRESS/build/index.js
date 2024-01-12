@@ -45,6 +45,7 @@ if (!PORT)
 if (!REDIS_URL)
     throw new Error("REDIS_URL is required");
 const startServer = () => __awaiter(void 0, void 0, void 0, function* () {
+    console.log("trying to start server");
     const client = redis.createClient({ url: REDIS_URL });
     yield client.connect();
     const app = (0, app_1.createApp)(client);
