@@ -19,7 +19,7 @@ const createApp = (client) => {
     const app = (0, express_1.default)();
     app.use(express_1.default.json());
     app.get("/", (request, response) => {
-        response.status(200).send("hello from express");
+        response.status(200).send("hello from express, deployed on AWS Lightsail");
     });
     app.post("/messages", (request, response) => __awaiter(void 0, void 0, void 0, function* () {
         const { message } = request.body;
