@@ -7,25 +7,25 @@ on:
 
 jobs:
   deploy:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
       - name: Set up SSH
         run: |
           mkdir -p ~/.ssh/
-          echo "${{secrets.SSH_PRIVATE_KEY}}" > ~/.ssh/id_rsa
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
-
-      - name: Set up known hosts
+      - name: Setup known_hosts
         run: |
           echo "${{ secrets.SSH_KNOWN_HOSTS }}" >> ~/.ssh/known_hosts
           chmod 644 ~/.ssh/known_hosts
-
       - name: SSH and deploy
         run: |
           ssh ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_PUBLIC_IP }} "
-          cd express
-          git pull || exit 1
-          npm install || exit 1
-          npm run build || exit 1
-
+            cd express
+            git pull || exit 1
+            npm install || exit 1
+            npm run build || exit 1
+            sudo pkill node || true
+            sudo nohup npm run start &
+            exit
           "
