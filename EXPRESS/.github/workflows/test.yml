@@ -8,19 +8,33 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
+
       - name: Node.js setup
         uses: actions/setup-node@v3
         with:
-          node-version: "21"
+          node-version: "20" # 변경된 부분
+
       - name: Install npm packages
-        run: npm ci
-      - name: install and run redis-server
+        run: |
+          npm ci
+          npm list --depth=0 # npm 패키지 목록 출력 추가
+
+      - name: Install and run redis-server
         run: |
           sudo apt-get update
           sudo apt-get install -y redis-server
           redis-server --daemonize yes --requirepass test_env --port 6380
-      - name: Run test
+
+      - name: Run tests
         run: npm run test:ci
 
-      - name: test build
+      - name: Test build
         run: npm run build
+
+      - name: Display package-lock.json
+        run: cat package-lock.json
+
+      - name: Debugging Output
+        run: |
+          echo "Current directory: $(pwd)"
+          ls -al
