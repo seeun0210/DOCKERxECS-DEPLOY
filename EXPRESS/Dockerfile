@@ -1,10 +1,14 @@
 # 기본 운영체제
 FROM node:18
+# package.json이 바뀌지 않으면 전에 했던걸 그대로 가져옴(cash에서 가져옴)->빌드가 빨라짐
+COPY package*.json .
+
+RUN npm install 
 
 # host machine에서 dockerfile 경로에 있는 모든 것들을 다 copy해 옴
 COPY . .
 
-RUN npm install 
+
 RUN npm run build
 
 CMD [ "npm", "start" ]

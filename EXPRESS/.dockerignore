@@ -1,0 +1,5 @@
+.env
+.github
+build
+node_modules
+jest.config.js
