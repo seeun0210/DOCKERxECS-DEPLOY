@@ -27,4 +27,4 @@ COPY --from=build ./usr/src/my-app/package-lock.json ./package-lock.json
 
 RUN npm install --only=production
 
-CMD ["npm", "start"]
+CMD ["node", "build/index.js"]
